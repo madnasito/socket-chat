@@ -1,7 +1,5 @@
 var socket = io();
 
-let params = new URLSearchParams(window.location.search)
-
 if (!params.has("nombre") || !params.has('sala')) {
     window.location = "index.html"
     throw new Error("El nombre y la sala son necesarios")
@@ -17,7 +15,8 @@ socket.on('connect', function() {
 
     socket.emit("entrarChat", usuario, (resp) => {
 
-        console.log("Usuarios conectados ", resp);
+        // console.log("Usuarios conectados ", resp);
+        rendirizarUsuarios(resp)
 
     })
 });
@@ -41,7 +40,8 @@ socket.on('disconnect', function() {
 // Escuchar información
 socket.on('crearMensaje', function(mensaje) {
 
-    console.log('Servidor: ', mensaje);
+    renderizarMensajes(mensaje, false)
+    scrollBottom()
 
 });
 
@@ -49,7 +49,7 @@ socket.on('crearMensaje', function(mensaje) {
 //Cuando un usuario entra o sale del chat
 socket.on("listaPersona", (personas) => {
 
-    console.log(personas)
+    rendirizarUsuarios(personas)
 
 })
 
